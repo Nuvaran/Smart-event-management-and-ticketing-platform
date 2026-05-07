@@ -1,0 +1,32 @@
+{
+  "name": "smart-event-management-and-ticketing-platform",
+  "version": "1.0.0",
+  "description": "A full-stack web application that enables users to browse events, book tickets, and manage enquiries, while allowing administrators to create and manage events with real-time insights and secure access control.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nuvaran/Smart-event-management-and-ticketing-platform.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nuvaran/Smart-event-management-and-ticketing-platform/issues"
+  },
+  "homepage": "https://github.com/Nuvaran/Smart-event-management-and-ticketing-platform#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.4.2",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mongoose": "^9.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
