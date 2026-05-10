@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' | Smart Event Platform' : 'Smart Event Platform' %></title>
+
+  <link rel="stylesheet" href="/css/tailwind.css">
+  <link rel="stylesheet" href="/css/custom.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased flex flex-col min-h-screen">
+  
+  <!-- Navbar Partial -->
+  <%- include('../partials/navbar') %>
+  
+  <!-- Main Content -->
+  <main class="flex-grow">
+    <%- body %>
+  </main>
+  
+  <!-- Footer Partial -->
+  <%- include('../partials/footer') %>
+  
+  <!-- Global Scripts -->
+  <script src="/js/main.js"></script>
+  <script src="/js/search-filter.js"></script>
+</body>
+</html>

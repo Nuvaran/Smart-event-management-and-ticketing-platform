@@ -1,0 +1,70 @@
+<nav class="bg-white shadow sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      
+      <!-- Logo -->
+      <div class="flex-shrink-0 flex items-center">
+        <a href="/" class="text-2xl font-bold text-primary flex items-center transition-colors hover:text-primary-hover">
+          <i class="fas fa-calendar-check mr-2"></i> 
+          <span class="hidden sm:block">Smart Events</span>
+        </a>
+      </div>
+      
+      <!-- Desktop Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-lg mx-8">
+        <div class="relative w-full">
+          <input 
+            type="text" 
+            placeholder="Search events, categories, or locations..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
+          >
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <i class="fas fa-search text-gray-400"></i>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Desktop Nav Links -->
+      <div class="hidden md:flex items-center space-x-6">
+        <% if (typeof user !== 'undefined' && user) { %>
+          
+          <!-- Role-Based Links -->
+          <% if (user.role === 'admin') { %>
+            <a href="/admin/dashboard" class="text-gray-600 hover:text-primary font-medium transition-colors">Dashboard</a>
+            <a href="/admin/events" class="text-gray-600 hover:text-primary font-medium transition-colors">Manage Events</a>
+          <% } else { %>
+            <a href="/my-bookings" class="text-gray-600 hover:text-primary font-medium transition-colors">My Bookings</a>
+          <% } %>
+          
+          <!-- User Dropdown (Simplified for now) -->
+          <div class="relative group cursor-pointer flex items-center space-x-2 text-gray-700 hover:text-primary transition-colors">
+            <img src="<%= user.profileImage || '/images/placeholders/avatar-placeholder.png' %>" alt="Profile" class="w-8 h-8 rounded-full border border-gray-200">
+            <span class="font-medium"><%= user.firstName %></span>
+            <i class="fas fa-chevron-down text-xs"></i>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div class="py-1">
+                <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">Profile Settings</a>
+                <hr class="my-1 border-gray-100">
+                <a href="/logout" class="block px-4 py-2 text-sm text-danger hover:bg-red-50">Sign out</a>
+              </div>
+            </div>
+          </div>
+          
+        <% } else { %>
+          <!-- Guest Links -->
+          <a href="/login" class="text-gray-600 hover:text-primary font-medium transition-colors">Log in</a>
+          <a href="/register" class="bg-primary text-white px-5 py-2 rounded-lg font-medium hover:bg-primary-hover shadow-sm transition-colors">Sign up</a>
+        <% } %>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="md:hidden flex items-center">
+        <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,63 @@
+<div class="bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full">
+  <!-- Image Header -->
+  <div class="relative h-48 overflow-hidden group">
+    <img 
+      src="<%= event.imageUrl || '/images/placeholders/event-placeholder.jpg' %>"
+      alt="<%= event.title %>"
+      class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+      onerror="this.src='https://via.placeholder.com/600x400?text=Event+Image'"
+    >
+    <!-- Price Badge -->
+    <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-bold text-gray-900 shadow-sm">
+      <%= event.price === 0 ? 'Free' : '$' + event.price.toFixed(2) %>
+    </div>
+    <!-- Category Badge -->
+    <div class="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-white shadow-sm uppercase tracking-wide">
+      <%= event.category %>
+    </div>
+  </div>
+  
+  <!-- Card Body -->
+  <div class="p-5 flex-grow flex flex-col">
+    <h3 class="text-xl font-bold text-gray-900 mb-2 line-clamp-2 hover:text-primary transition-colors">
+      <a href="/events/<%= event._id %>"><%= event.title %></a>
+    </h3>
+    
+    <div class="space-y-2 text-sm text-gray-600 mb-6 flex-grow">
+      <div class="flex items-start">
+        <i class="fas fa-calendar-alt mt-1 mr-3 text-primary w-4 text-center"></i>
+        <span><%= new Date(event.date).toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' }) %></span>
+      </div>
+      <div class="flex items-start">
+        <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary w-4 text-center"></i>
+        <span class="line-clamp-2"><%= event.location %></span>
+      </div>
+    </div>
+    
+    <!-- Availability -->
+    <div class="mb-5 pt-4 border-t border-gray-100">
+      <div class="flex justify-between items-center text-sm mb-2">
+        <span class="font-medium text-gray-700">Availability</span>
+        <span class="font-bold <%= event.availableTickets > 0 ? (event.availableTickets < 20 ? 'text-warning' : 'text-success') : 'text-danger' %>">
+          <%= event.availableTickets > 0 ? `${event.availableTickets} left` : 'Sold Out' %>
+        </span>
+      </div>
+      <!-- Progress Bar -->
+      <div class="w-full bg-gray-100 rounded-full h-2 overflow-hidden">
+        <% const percentBooked = event.capacity > 0 ? ((event.capacity - event.availableTickets) / event.capacity) * 100 : 0; %>
+        <div 
+          class="h-full rounded-full <%= event.availableTickets === 0 ? 'bg-danger' : (event.availableTickets < 20 ? 'bg-warning' : 'bg-success') %>"
+          style="--pct: <%= percentBooked.toFixed(1) %>%; width: var(--pct)"
+        ></div>
+      </div>
+    </div>
+    
+    <!-- CTA Button -->
+    <a 
+      href="/events/<%= event._id %>"
+      class="w-full block text-center <%= event.availableTickets > 0 ? 'bg-primary hover:bg-primary-hover text-white' : 'bg-gray-200 text-gray-500 cursor-not-allowed pointer-events-none' %> py-2.5 rounded-lg font-medium transition-colors shadow-sm"
+    >
+      <%= event.availableTickets > 0 ? 'View Details' : 'Join Waitlist' %>
+    </a>
+  </div>
+</div>
