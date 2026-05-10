@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Authentication - Smart Event Platform' %></title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/custom.css">
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
+    <div class="min-h-screen flex flex-col lg:flex-row">
+        
+        <!-- Left Side - Branding (Hidden on Mobile) -->
+        <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white flex-col justify-center items-center p-12">
+            <div class="max-w-md text-center">
+                <div class="text-6xl mb-6">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                
+                <h1 class="text-4xl font-bold mb-4">Smart Events</h1>
+                <p class="text-xl text-indigo-100 mb-8">
+                    Manage events, book tickets, and create unforgettable experiences with our modern event platform.
+                </p>
+                
+                <div class="space-y-4 text-left">
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-teal-300 mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">Easy Event Discovery</h3>
+                            <p class="text-sm text-indigo-100">Browse and search events by category, date, and location</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-teal-300 mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">Secure Bookings</h3>
+                            <p class="text-sm text-indigo-100">Book tickets with confidence using our secure system</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start">
+                        <i class="fas fa-check-circle text-teal-300 mr-3 mt-1"></i>
+                        <div>
+                            <h3 class="font-semibold">Professional Management</h3>
+                            <p class="text-sm text-indigo-100">Manage your bookings and view event history</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Side - Form Container -->
+        <div class="flex-1 flex items-center justify-center p-6 sm:p-8 lg:p-12">
+            <div class="w-full max-w-md">
+                <!-- Logo on Mobile -->
+                <div class="lg:hidden text-center mb-8">
+                    <a href="/" class="inline-flex items-center justify-center text-3xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                        <i class="fas fa-calendar-check mr-2"></i>
+                        <span>Smart Events</span>
+                    </a>
+                </div>
+                
+                <!-- Page Content (will be injected here) -->
+                <%- body %>
+                
+                <!-- Footer Link -->
+                <p class="text-center text-gray-600 text-sm mt-8">
+                    Protected by industry-standard security measures
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

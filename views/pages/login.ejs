@@ -1,0 +1,221 @@
+<!-- Login Page -->
+
+<div class="auth-form-container">
+    <!-- Header -->
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h2>
+        <p class="text-gray-600">Sign in to your account to continue</p>
+    </div>
+
+    <!-- Alert Messages -->
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+            <div class="flex items-start">
+                <i class="fas fa-exclamation-circle text-red-500 mt-1 mr-3"></i>
+                <div>
+                    <h3 class="font-semibold text-red-800 mb-1">Login Failed</h3>
+                    <ul class="text-red-700 text-sm space-y-1">
+                        <% errors.forEach(error => { %>
+                            <li>• <%= error %></li>
+                        <% }); %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <% if (typeof message !== 'undefined' && message) { %>
+        <div class="mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+            <div class="flex items-start">
+                <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                <div>
+                    <p class="text-green-700"><%= message %></p>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Login Form -->
+    <form id="loginForm" action="/login" method="POST" class="space-y-5" novalidate>
+        
+        <!-- Email Input -->
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+            </label>
+            <div class="relative">
+                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <input 
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="your.email@example.com"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    required
+                    value="<%= typeof email !== 'undefined' ? email : '' %>"
+                >
+            </div>
+            <p class="text-red-500 text-sm mt-1 hidden" id="emailError"></p>
+        </div>
+
+        <!-- Password Input -->
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <label for="password" class="block text-sm font-medium text-gray-700">
+                    Password
+                </label>
+                <a href="/forgot-password" class="text-sm text-indigo-600 hover:text-indigo-700 transition-colors">
+                    Forgot password?
+                </a>
+            </div>
+            <div class="relative">
+                <div class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <input 
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                    required
+                >
+                <button
+                    type="button"
+                    id="togglePassword"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    aria-label="Toggle password visibility"
+                >
+                    <i class="fas fa-eye"></i>
+                </button>
+            </div>
+            <p class="text-red-500 text-sm mt-1 hidden" id="passwordError"></p>
+        </div>
+
+        <!-- Remember Me Checkbox -->
+        <div class="flex items-center">
+            <input 
+                type="checkbox"
+                id="rememberMe"
+                name="rememberMe"
+                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded cursor-pointer"
+            >
+            <label for="rememberMe" class="ml-2 block text-sm text-gray-700 cursor-pointer">
+                Remember me
+            </label>
+        </div>
+
+        <!-- Login Button -->
+        <button 
+            type="submit"
+            class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 transition-all duration-200 flex items-center justify-center"
+            id="loginBtn"
+        >
+            <span id="btnText">Sign In</span>
+            <i class="fas fa-spinner fa-spin ml-2 hidden" id="btnSpinner"></i>
+        </button>
+
+        <!-- Divider -->
+        <div class="relative my-6">
+            <div class="absolute inset-0 flex items-center">
+                <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+                <span class="px-2 bg-white text-gray-600">or</span>
+            </div>
+        </div>
+
+        <!-- Sign Up Link -->
+        <div class="text-center">
+            <p class="text-gray-600">
+                Don't have an account?
+                <a href="/register" class="text-indigo-600 font-semibold hover:text-indigo-700 transition-colors">
+                    Create one now
+                </a>
+            </p>
+        </div>
+    </form>
+
+    <!-- Admin Login Info (Optional) -->
+    <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <div class="flex items-start">
+            <i class="fas fa-info-circle text-blue-500 mt-0.5 mr-2"></i>
+            <div class="text-sm">
+                <p class="text-blue-800 font-medium mb-1">Admin Login</p>
+                <p class="text-blue-700">Administrators can log in with the same credentials. Admin features will be available after successful login.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+<script src="/js/form-validation.js"></script>
+<script src="/js/auth-form.js"></script>
+
+<script>
+    // Password visibility toggle
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('fa-eye');
+            icon.classList.add('fa-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('fa-eye-slash');
+            icon.classList.add('fa-eye');
+        }
+    });
+
+    // Form validation on submit
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        if (!validateLoginForm()) {
+            e.preventDefault();
+        }
+    });
+
+    function validateLoginForm() {
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        let isValid = true;
+
+        // Clear previous errors
+        document.getElementById('emailError').classList.add('hidden');
+        document.getElementById('passwordError').classList.add('hidden');
+
+        // Email validation
+        if (!email) {
+            showError('emailError', 'Email address is required');
+            isValid = false;
+        } else if (!isValidEmail(email)) {
+            showError('emailError', 'Please enter a valid email address');
+            isValid = false;
+        }
+
+        // Password validation
+        if (!password) {
+            showError('passwordError', 'Password is required');
+            isValid = false;
+        } else if (password.length < 6) {
+            showError('passwordError', 'Password must be at least 6 characters');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function showError(elementId, message) {
+        const element = document.getElementById(elementId);
+        element.textContent = message;
+        element.classList.remove('hidden');
+    }
+
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+</script>
