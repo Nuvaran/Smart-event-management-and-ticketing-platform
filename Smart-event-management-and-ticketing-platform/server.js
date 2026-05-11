@@ -25,7 +25,7 @@ app.use(session({
 
 // Make user data available in all views
 app.use((req, res, next) => {
-  res.locals.user = req.session.user || null;
+  res.locals.user = req.session.userID ? {id: req.session.userId, role: req.session.role}: null;
   next();
 });
 
