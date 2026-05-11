@@ -1,55 +1,46 @@
 require('dotenv').config();
-
-const express  = require('express');
+const express = require('express');
 const mongoose = require('mongoose');
-const session  = require('express-session');
-const path     = require('path');
+const session = require('express-session');
+const path = require('path');
 
 const app = express();
 
-// Views
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Middleware
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
-  secret:            process.env.SESSION_SECRET,
-  resave:            false,
+  secret: process.env.SESSION_SECRET,
+  resave: false,
   saveUninitialized: false
 }));
 
-// Make user available in all views
 app.use((req, res, next) => {
-  res.locals.user = req.session.user || null;
+  res.locals.user = req.session.userId || null;
   next();
 });
 
-// Routes
-const authRoutes    = require('./routes/authRoutes');
-const eventRoutes   = require('./routes/eventRoutes');
-const bookingRoutes = require('./routes/bookingRoutes');
-const enquiryRoutes = require('./routes/enquiryRoutes');
 
-app.use('/auth',     authRoutes);
-app.use('/events',   eventRoutes);
-app.use('/bookings', bookingRoutes);
-app.use('/contact',  enquiryRoutes);
+app.use('/auth', require('./routes/authRoutes'));
+app.use('/events', require('./routes/eventRoutes'));
+app.use('/bookings', require('./routes/bookingRoutes'));
+app.use('/contact', require('./routes/enquiryRoutes'));
 
-// Home page
-app.get('/', (req, res) => {
-  res.render('pages/index', { events: [], search: '', category: '', date: '' });
-});
 
-// Connect to MongoDB and start server
+const eventController = require('./controllers/eventController');
+app.get('/', eventController.getAllEvents);
+
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log('MongoDB connected');
-    app.listen(process.env.PORT || 3000, () =>
-      console.log('Server running on http://localhost:3000')
-    );
+    console.log('MongoDB connected via .env');
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
   })
   .catch(err => console.error('DB connection error:', err));
