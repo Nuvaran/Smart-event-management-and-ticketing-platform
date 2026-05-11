@@ -1,17 +1,17 @@
 require('dotenv').config();
 
-const express = require('express');
+const express  = require('express');
 const mongoose = require('mongoose');
-const session = require('express-session');
-const path = require('path');
+const session  = require('express-session');
+const path     = require('path');
 
 const app = express();
 
-//views
+// Views
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-//middleware
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -22,12 +22,13 @@ app.use(session({
   saveUninitialized: false
 }));
 
-// Make user data available in all views
+// Make user available in all views
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
   next();
 });
 
+// Routes
 const authRoutes    = require('./routes/authRoutes');
 const eventRoutes   = require('./routes/eventRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
@@ -40,7 +41,7 @@ app.use('/contact',  enquiryRoutes);
 
 // Home page
 app.get('/', (req, res) => {
-  res.render('index', { events: [], search: '', category: '', date: '' });
+  res.render('pages/index', { events: [], search: '', category: '', date: '' });
 });
 
 // Connect to MongoDB and start server
@@ -51,4 +52,4 @@ mongoose.connect(process.env.MONGO_URI)
       console.log('Server running on http://localhost:3000')
     );
   })
-  .catch(err => console.log('DB connection error:', err));
+  .catch(err => console.error('DB connection error:', err));
