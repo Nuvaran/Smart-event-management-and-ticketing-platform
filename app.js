@@ -40,9 +40,8 @@ app.use('/bookings', bookingRoutes);
 app.use('/contact',  enquiryRoutes);
 
 // Home page
-app.get('/', (req, res) => {
-  res.render('pages/index', { events: [], search: '', category: '', date: '' });
-});
+const eventController = require(`./controllers/eventController`);
+app.get(`/`, eventController.getAllEvents);
 
 // Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI)

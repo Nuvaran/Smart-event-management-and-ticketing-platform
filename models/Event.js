@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 
-const enquirySchema = new mongoose.Schema({
-  name: { type: String, required: true, minlength: 2, maxlength: 50 },
-  email: {
-    type: String, required: true,
-    match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
-  },
-  message: { type: String, required: true, minlength: 10, maxlength: 1000 },
-  status: { type: String, enum: ['unread', 'read'], default: 'unread' },
-  submittedAt: { type: Date, default: Date.now }
+const eventSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: String,
+  category: { type: String, enum: ['conference', 'festival', 'workshop', 'other'] },
+  date: { type: Date, required: true },
+  location: String,
+  capacity: { type: Number, required: true },
+  ticketsAvailable: { type: Number, required: true },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 });
 
-module.exports = mongoose.model('Enquiry', enquirySchema);
+module.exports = mongoose.model('Event', eventSchema);
