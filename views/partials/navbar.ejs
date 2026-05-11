@@ -1,70 +1,132 @@
-<nav class="bg-white shadow sticky top-0 z-50">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center h-16">
-      
-      <!-- Logo -->
-      <div class="flex-shrink-0 flex items-center">
-        <a href="/" class="text-2xl font-bold text-primary flex items-center transition-colors hover:text-primary-hover">
-          <i class="fas fa-calendar-check mr-2"></i> 
-          <span class="hidden sm:block">Smart Events</span>
-        </a>
-      </div>
-      
-      <!-- Desktop Search Bar -->
-      <div class="hidden md:flex flex-1 max-w-lg mx-8">
-        <div class="relative w-full">
-          <input 
-            type="text" 
-            placeholder="Search events, categories, or locations..."
-            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all"
-          >
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <i class="fas fa-search text-gray-400"></i>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Desktop Nav Links -->
-      <div class="hidden md:flex items-center space-x-6">
-        <% if (typeof user !== 'undefined' && user) { %>
-          
-          <!-- Role-Based Links -->
-          <% if (user.role === 'admin') { %>
-            <a href="/admin/dashboard" class="text-gray-600 hover:text-primary font-medium transition-colors">Dashboard</a>
-            <a href="/admin/events" class="text-gray-600 hover:text-primary font-medium transition-colors">Manage Events</a>
-          <% } else { %>
-            <a href="/my-bookings" class="text-gray-600 hover:text-primary font-medium transition-colors">My Bookings</a>
-          <% } %>
-          
-          <!-- User Dropdown (Simplified for now) -->
-          <div class="relative group cursor-pointer flex items-center space-x-2 text-gray-700 hover:text-primary transition-colors">
-            <img src="<%= user.profileImage || '/images/placeholders/avatar-placeholder.png' %>" alt="Profile" class="w-8 h-8 rounded-full border border-gray-200">
-            <span class="font-medium"><%= user.firstName %></span>
-            <i class="fas fa-chevron-down text-xs"></i>
+<!-- Navigation Bar Partial -->
+<nav class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
             
-            <!-- Dropdown Menu -->
-            <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-              <div class="py-1">
-                <a href="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-primary">Profile Settings</a>
-                <hr class="my-1 border-gray-100">
-                <a href="/logout" class="block px-4 py-2 text-sm text-danger hover:bg-red-50">Sign out</a>
-              </div>
+            <!-- Logo -->
+            <a href="/" class="flex items-center space-x-2 text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                <i class="fas fa-calendar-check"></i>
+                <span class="hidden sm:inline">Smart Events</span>
+                <span class="sm:hidden">SE</span>
+            </a>
+            
+            <!-- Search Bar (Hidden on small screens) -->
+            <div class="hidden md:flex flex-1 mx-8">
+                <form action="/search" method="GET" class="w-full max-w-md relative">
+                    <div class="relative">
+                        <input 
+                            type="text" 
+                            name="q"
+                            placeholder="Search events..."
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
+                            value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                        >
+                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
             </div>
-          </div>
-          
-        <% } else { %>
-          <!-- Guest Links -->
-          <a href="/login" class="text-gray-600 hover:text-primary font-medium transition-colors">Log in</a>
-          <a href="/register" class="bg-primary text-white px-5 py-2 rounded-lg font-medium hover:bg-primary-hover shadow-sm transition-colors">Sign up</a>
-        <% } %>
-      </div>
-
-      <!-- Mobile Menu Button -->
-      <div class="md:hidden flex items-center">
-        <button id="mobile-menu-btn" class="text-gray-600 hover:text-primary focus:outline-none">
-          <i class="fas fa-bars text-2xl"></i>
-        </button>
-      </div>
+            
+            <!-- Navigation Links -->
+            <div class="flex items-center space-x-6">
+                
+                <!-- Home Link -->
+                <a href="/" class="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium">
+                    <i class="fas fa-home mr-1"></i>
+                    <span class="hidden sm:inline">Home</span>
+                </a>
+                
+                <% if (typeof user !== 'undefined' && user) { %>
+                    
+                    <!-- User-specific links -->
+                    <% if (user.role === 'admin') { %>
+                        <!-- Admin Navigation -->
+                        <a href="/admin/dashboard" class="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium">
+                            <i class="fas fa-chart-line mr-1"></i>
+                            <span class="hidden sm:inline">Dashboard</span>
+                        </a>
+                        <a href="/admin/events" class="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium">
+                            <i class="fas fa-cog mr-1"></i>
+                            <span class="hidden sm:inline">Events</span>
+                        </a>
+                        <a href="/admin/enquiries" class="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium">
+                            <i class="fas fa-envelope mr-1"></i>
+                            <span class="hidden sm:inline">Enquiries</span>
+                        </a>
+                    <% } else { %>
+                        <!-- User Navigation -->
+                        <a href="/my-bookings" class="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium">
+                            <i class="fas fa-ticket-alt mr-1"></i>
+                            <span class="hidden sm:inline">My Bookings</span>
+                        </a>
+                    <% } %>
+                    
+                    <!-- User Menu Dropdown -->
+                    <div class="relative group">
+                        <button class="flex items-center space-x-2 text-gray-700 hover:text-indigo-600 transition-colors">
+                            <i class="fas fa-user-circle text-xl"></i>
+                            <span class="hidden sm:inline text-sm"><%= user.firstName || 'User' %></span>
+                            <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        
+                        <!-- Dropdown Menu -->
+                        <div class="absolute right-0 mt-0 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <a href="/profile" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition-colors border-b border-gray-200">
+                                <i class="fas fa-user mr-2"></i> Profile
+                            </a>
+                            <a href="/settings" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition-colors border-b border-gray-200">
+                                <i class="fas fa-cog mr-2"></i> Settings
+                            </a>
+                            <a href="/logout" class="block px-4 py-2 text-gray-700 hover:bg-gray-50 hover:text-red-600 transition-colors">
+                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                    
+                <% } else { %>
+                    
+                    <!-- Guest Navigation -->
+                    <a href="/login" class="text-gray-700 hover:text-indigo-600 transition-colors text-sm font-medium">
+                        <i class="fas fa-sign-in-alt mr-1"></i>
+                        <span class="hidden sm:inline">Login</span>
+                    </a>
+                    <a href="/register" class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors text-sm font-medium">
+                        <i class="fas fa-user-plus mr-1"></i>
+                        <span class="hidden sm:inline">Register</span>
+                    </a>
+                    
+                <% } %>
+                
+                <!-- Mobile Search Toggle -->
+                <button id="mobileSearchBtn" class="md:hidden text-gray-700 hover:text-indigo-600 transition-colors">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mobile Search Bar -->
+        <div id="mobileSearch" class="hidden md:hidden pb-4 border-t border-gray-200 pt-4">
+            <form action="/search" method="GET" class="relative">
+                <input 
+                    type="text" 
+                    name="q"
+                    placeholder="Search events..."
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+                >
+                <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
     </div>
-  </div>
 </nav>
+
+<!-- Mobile Search Toggle Script -->
+<script>
+    document.getElementById('mobileSearchBtn').addEventListener('click', function() {
+        const searchDiv = document.getElementById('mobileSearch');
+        searchDiv.classList.toggle('hidden');
+    });
+</script>
