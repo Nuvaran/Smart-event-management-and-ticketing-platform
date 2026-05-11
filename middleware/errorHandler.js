@@ -1,4 +1,3 @@
-//centralised error handling
 const errorHandler = (err, req, res, next) => {
     console.error(err.stack);
     const status = err.statusCode || 500;
@@ -13,8 +12,3 @@ const errorHandler = (err, req, res, next) => {
 
 module.exports = errorHandler;
 
-/* add in server.js
-const errorHandler = require("./middleware/errorHandler");
-// Central error handler must be AFTER routes
-app.use(errorHandler);
-*/
