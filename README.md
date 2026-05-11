@@ -1,3 +1,9 @@
+.env{
+MONGO_URI=mongodb+srv://600256_db_user:Admin2026@cluster0.wvy3wsh.mongodb.net/wpr_db
+SESSION_SECRET=supersecretkey123
+PORT=3000
+}
+
 # 🎟️ Smart Event Management & Ticketing Platform
 
 A full-stack web application that enables users to browse events, book tickets, and manage enquiries, while allowing administrators to create and manage events with real-time insights and secure access control.
