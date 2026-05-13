@@ -17,7 +17,7 @@ Built using **Node.js, Express, EJS, and MongoDB**, the system follows the **MVC
 - **Team Lead / Project Coordinator:** _[Name]_
 - **Backend Developer:** _[Name]_
 - **Frontend Developer:** _[Your Name]_
-- **Database Engineer:Masego Motswe (600256)
+- **Database Engineer:** Masego Motswe (600256)
 - **DevOps Engineer:** _[Name]_
 
 ---
