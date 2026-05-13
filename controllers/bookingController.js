@@ -49,6 +49,7 @@ exports.getMyBookings = async (req, res) => {
     try {
         const bookings = await Booking.find({ user: req.session.user.id })
             .populate('event')
+            .populate('user')
             .sort({ bookedAt: -1 })
             .lean();
 

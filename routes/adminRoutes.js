@@ -16,8 +16,11 @@ router.get('/dashboard', async (req, res) => {
             Event.countDocuments(),
             Booking.countDocuments(),
             Enquiry.countDocuments({ status: 'unread' }),
-            Booking.find().sort({ bookedAt: -1 }).limit(5)
-                .populate('user', 'name').populate('event', 'title').lean()
+            Booking.find().sort({ bookedAt: -1 }).limit(10)
+                .populate('user', 'name')
+                .populate('event', 'title')
+                .lean()
+                .then(bookings => bookings.filter(b => b.user && b.event))
         ]);
         res.render('pages/admin-dashboard', {
             title: 'Dashboard – Admin',
