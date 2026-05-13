@@ -1,0 +1,102 @@
+<!-- Login Page -->
+<div>
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-1">Welcome Back</h2>
+        <p class="text-gray-500">Sign in to your Smart Events account</p>
+    </div>
+
+    <!-- Success flash after registration -->
+    <% if (locals.flash && locals.flash.success === 'registered') { %>
+        <div class="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
+            <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+            <p class="text-green-700 text-sm">Account created successfully! You can now sign in.</p>
+        </div>
+    <% } %>
+
+    <!-- Error messages -->
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start gap-3">
+                <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
+                <ul class="text-red-700 text-sm space-y-0.5">
+                    <% errors.forEach(e => { %><li><%= e %></li><% }); %>
+                </ul>
+            </div>
+        </div>
+    <% } %>
+
+    <form id="loginForm" action="/auth/login" method="POST" class="space-y-5" novalidate>
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <div class="relative">
+                <i class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="email" id="email" name="email" required
+                    placeholder="your@email.com"
+                    value="<%= typeof email !== 'undefined' ? email : '' %>"
+                    class="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm 
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <p class="text-red-500 text-xs mt-1 hidden" id="emailError"></p>
+        </div>
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="password" id="password" name="password" required
+                    placeholder="Your password"
+                    class="w-full pl-9 pr-10 py-2.5 border border-gray-300 rounded-lg text-sm 
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="button" onclick="togglePw('password', this)"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-eye text-sm"></i>
+                </button>
+            </div>
+            <p class="text-red-500 text-xs mt-1 hidden" id="passwordError"></p>
+        </div>
+        <button type="submit" id="loginBtn"
+            class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold text-sm 
+                   hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+            <span id="btnText">Sign In</span>
+            <i class="fas fa-spinner fa-spin hidden" id="btnSpinner"></i>
+        </button>
+    </form>
+
+    <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+        <div class="relative flex justify-center"><span class="px-3 bg-white text-gray-400 text-sm">or</span></div>
+    </div>
+
+    <p class="text-center text-sm text-gray-600">
+        No account? <a href="/auth/register" class="text-indigo-600 font-semibold hover:underline">Create one</a>
+    </p>
+</div>
+
+<script>
+    function togglePw(fieldId, btn) {
+        const f = document.getElementById(fieldId);
+        const i = btn.querySelector('i');
+
+        f.type = f.type === 'password' ? 'text' : 'password';
+        i.classList.toggle('fa-eye'); i.classList.toggle('fa-eye-slash');
+    }
+    
+    document.getElementById('loginForm').addEventListener('submit', function(e) {
+        let ok = true;
+
+        ['emailError','passwordError'].forEach(id => document.getElementById(id).classList.add('hidden'));
+
+        const email = document.getElementById('email').value.trim();
+        const pw = document.getElementById('password').value;
+
+        if (!email || !/^\S+@\S+\.\S+$/.test(email)) { showE('emailError','Valid email required.'); ok=false; }
+        if (!pw || pw.length < 6) { showE('passwordError','Password required (min 6 chars).'); ok=false; }
+        if (!ok) { e.preventDefault(); return; }
+
+        document.getElementById('loginBtn').disabled = true;
+        document.getElementById('btnText').textContent = 'Signing in…';
+        document.getElementById('btnSpinner').classList.remove('hidden');
+    });
+
+    function showE(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.classList.remove('hidden'); }
+
+</script>

@@ -1,0 +1,395 @@
+<!-- Admin Dashboard Page -->
+
+<% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+    
+    <!-- Page Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">Admin Dashboard</h1>
+        <p class="text-gray-600">Welcome back, <%= user.name %>. Here's your event management overview.</p>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        
+        <!-- Total Events Card -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-indigo-600">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm font-medium">Total Events</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">
+                        <%= typeof stats !== 'undefined' ? stats.totalEvents : 0 %>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">All active events</p>
+                </div>
+                <div class="text-4xl text-indigo-600 opacity-20">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Total Bookings Card -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-teal-600">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm font-medium">Total Bookings</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">
+                        <%= typeof stats !== 'undefined' ? stats.totalBookings : 0 %>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">Across all events</p>
+                </div>
+                <div class="text-4xl text-teal-600 opacity-20">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pending Enquiries Card -->
+        <div class="bg-white rounded-lg shadow p-6 border-l-4 border-amber-600">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 text-sm font-medium">Pending Enquiries</p>
+                    <p class="text-3xl font-bold text-gray-900 mt-2">
+                        <%= typeof stats !== 'undefined' ? stats.pendingEnquiries : 0 %>
+                    </p>
+                    <p class="text-xs text-gray-500 mt-1">Awaiting response</p>
+                </div>
+                <div class="text-4xl text-amber-600 opacity-20">
+                    <i class="fas fa-envelope"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <!-- Bookings Over Time Chart -->
+        <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Bookings Over Time</h2>
+                <div class="flex items-center gap-2 text-xs text-gray-400">
+                    <span id="chart-live-dot" class="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                    <span id="chart-last-updated">Live</span>
+                </div>
+            </div>
+            <div class="relative h-64">
+                <canvas id="bookingsChart"></canvas>
+                <div id="chart-loading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-80 rounded">
+                    <div class="flex flex-col items-center gap-2">
+                        <svg class="animate-spin h-8 w-8 text-indigo-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+                        </svg>
+                        <span class="text-sm text-gray-500">Loading chart…</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Top Events Card -->
+        <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
+            <div class="flex items-center justify-between mb-4">
+                <h2 class="text-xl font-semibold text-gray-900">Top Events by Bookings</h2>
+                <div class="flex items-center gap-2 text-xs text-gray-400">
+                    <span class="inline-block w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                    <span id="top-events-updated">Live</span>
+                </div>
+            </div>
+            <div id="top-events-list">
+                <!-- Skeleton placeholder while loading -->
+                <div class="space-y-3" id="top-events-skeleton">
+                    <% for (let s = 0; s < 5; s++) { %>
+                    <div class="flex items-center justify-between pb-3 border-b border-gray-200 animate-pulse">
+                        <div class="space-y-2">
+                            <div class="h-3 bg-gray-200 rounded w-40"></div>
+                            <div class="h-2 bg-gray-100 rounded w-20"></div>
+                        </div>
+                        <div class="space-y-2 text-right">
+                            <div class="h-3 bg-gray-200 rounded w-16 ml-auto"></div>
+                            <div class="h-2 bg-gray-100 rounded w-12 ml-auto"></div>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Actions -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <a href="/admin/events/create"
+           class="group bg-indigo-600 rounded-lg p-6 text-center transition-colors hover:bg-indigo-700">
+            <i class="fas fa-plus text-3xl mb-2 text-white"></i>
+            <p class="font-semibold text-white no-underline group-hover:text-white">
+                Create Event
+            </p>
+            <p class="text-sm text-white/80 group-hover:text-white/80">
+                Add a new event
+            </p>
+        </a>
+        <a href="/admin/events"
+           class="group bg-teal-600 rounded-lg p-6 text-center transition-colors hover:bg-teal-700">
+            <i class="fas fa-cog text-3xl mb-2 text-white"></i>
+            <p class="font-semibold text-white no-underline group-hover:text-white">
+                Manage Events
+            </p>
+            <p class="text-sm text-white/80 group-hover:text-white/80">
+                Edit or delete events
+            </p>
+        </a>
+        <a href="/admin/enquiries"
+           class="group bg-amber-600 rounded-lg p-6 text-center transition-colors hover:bg-amber-700">
+            <i class="fas fa-envelope text-3xl mb-2 text-white"></i>
+            <p class="font-semibold text-white no-underline group-hover:text-white">
+                View Enquiries
+            </p>
+            <p class="text-sm text-white/80 group-hover:text-white/80">
+                <%= typeof stats !== 'undefined' ? stats.pendingEnquiries : 0 %> pending
+            </p>
+        </a>
+    </div>
+    
+    <!-- Recent Bookings -->
+    <div class="bg-white rounded-lg shadow border border-gray-200">
+        <div class="p-6 border-b border-gray-200">
+            <h2 class="text-xl font-semibold text-gray-900">Recent Bookings</h2>
+        </div>
+        <div class="overflow-x-auto">
+            <% if (typeof recentBookings !== 'undefined' && recentBookings.length > 0) { %>
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Booking ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">User</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Event</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Quantity</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% recentBookings.slice(0, 5).forEach(booking => { %>
+                            <tr class="border-b border-gray-200 hover:bg-gray-50">
+                                <td class="px-6 py-3 text-sm text-gray-900"><%= booking._id.toString().slice(-6).toUpperCase() %></td>
+                                <td class="px-6 py-3 text-sm text-gray-900"><%= booking.user.name %></td>
+                                <td class="px-6 py-3 text-sm text-gray-900"><%= booking.event.title %></td>
+                                <td class="px-6 py-3 text-sm text-gray-900"><%= booking.ticketsBooked %></td>
+                                <td class="px-6 py-3 text-sm">
+                                    <% 
+                                        let badgeClass;
+                                        if (booking.status === 'confirmed') badgeClass = 'inline-block px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold capitalize';
+                                        else if (booking.status === 'pending') badgeClass = 'inline-block px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold capitalize';
+                                        else if (booking.status === 'cancelled') badgeClass = 'inline-block px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold capitalize';
+                                        else badgeClass = 'inline-block px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs font-semibold capitalize';
+                                    %>
+                                    <span class="<%- badgeClass %>">
+                                        <%= booking.status %>
+                                    </span>
+                                </td>
+                                <td class="px-6 py-3 text-sm text-gray-600">
+                                    <%= new Date(booking.bookedAt).toLocaleDateString('en-ZA') %>
+                                </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+            <% } else { %>
+                <div class="p-6 text-center text-gray-600">
+                    <p>No bookings yet</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+<% } else { %>
+    <!-- Unauthorized Access -->
+    <div class="text-center py-16">
+        <i class="fas fa-lock text-6xl text-gray-400 mb-4"></i>
+        <h1 class="text-3xl font-bold text-gray-900 mb-2">Access Denied</h1>
+        <p class="text-gray-600 mb-6">You don't have permission to access this page. Admin access is required.</p>
+        <a href="/" class="inline-block bg-indigo-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors">
+            <i class="fas fa-arrow-left mr-2"></i>Back to Home
+        </a>
+    </div>
+<% } %>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+<script>
+    (function () {
+        const canvas  = document.getElementById('bookingsChart');
+        const loading = document.getElementById('chart-loading');
+        const lastUpdatedEl = document.getElementById('chart-last-updated');
+        if (!canvas) return;
+
+        function makeGradient(ctx) {
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0,   'rgba(99, 102, 241, 0.35)');
+            grad.addColorStop(0.6, 'rgba(99, 102, 241, 0.08)');
+            grad.addColorStop(1,   'rgba(99, 102, 241, 0)');
+            return grad;
+        }
+
+        // Format YYYY-MM-DD
+        function fmtDate(iso) {
+            const d = new Date(iso + 'T00:00:00');
+            return d.toLocaleDateString('en-ZA', { day: 'numeric', month: 'short' });
+        }
+
+        // Chart instance
+        const chart = new Chart(canvas, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Bookings',
+                    data: [],
+                    borderColor: '#6366f1',
+                    borderWidth: 2.5,
+                    pointBackgroundColor: '#6366f1',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: makeGradient(canvas.getContext('2d'))
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e1b4b',
+                        titleColor: '#a5b4fc',
+                        bodyColor: '#e0e7ff',
+                        padding: 12,
+                        cornerRadius: 8,
+                        displayColors: false,
+                        callbacks: {
+                            title: items => fmtDate(items[0].label),
+                            label: item  => `  ${item.raw} booking${item.raw !== 1 ? 's' : ''}`
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: {
+                            color: '#9ca3af',
+                            font: { size: 11 },
+                            maxTicksLimit: 8,
+                            callback: function(val, idx) {
+                                return fmtDate(this.getLabelForValue(val));
+                            }
+                        },
+                        border: { display: false }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            color: '#9ca3af',
+                            font: { size: 11 },
+                            stepSize: 1,
+                            precision: 0
+                        },
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        border: { display: false }
+                    }
+                },
+                animation: { duration: 600, easing: 'easeInOutQuart' }
+            }
+        });
+
+        // Fetch & update
+        async function fetchAndUpdate() {
+            try {
+                const res  = await fetch('/admin/api/bookings-over-time');
+                const json = await res.json();
+
+                chart.data.labels = json.labels;
+                chart.data.datasets[0].data = json.data;
+
+                chart.data.datasets[0].backgroundColor = makeGradient(canvas.getContext('2d'));
+                chart.update('active');
+
+                const now = new Date();
+                lastUpdatedEl.textContent = 'Updated ' + now.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
+
+            } catch (e) {
+                console.warn('Chart update failed:', e);
+                lastUpdatedEl.textContent = 'Update failed';
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+            fetchAndUpdate();
+            setInterval(fetchAndUpdate, 30_000);
+        }
+    )();
+
+    // Top Events
+    (function () {
+        const listEl = document.getElementById('top-events-list');
+        const updatedEl = document.getElementById('top-events-updated');
+        if (!listEl) return;
+
+        function renderTopEvents(events) {
+            if (!events || events.length === 0) {
+                listEl.innerHTML = '<p class="text-gray-500 text-center py-8">No events with bookings yet</p>';
+                return;
+            }
+
+            const rows = events.map((evt, i) => {
+                const pct = evt.capacity > 0
+                    ? Math.min(100, Math.round((evt.bookings / evt.capacity) * 100))
+                    : 0;
+                // Pick a colour band for the rank badge
+                const badgeColors = ['bg-indigo-600', 'bg-indigo-500', 'bg-indigo-400', 'bg-indigo-300', 'bg-indigo-200'];
+                const textColors = ['text-white', 'text-white', 'text-white', 'text-indigo-900', 'text-indigo-900'];
+                const bc = badgeColors[i] || 'bg-gray-200';
+                const tc = textColors[i] || 'text-gray-700';
+
+                return `
+                <div class="flex items-center gap-3 pb-3 border-b border-gray-100 last:border-0 last:pb-0">
+                    <span class="flex-shrink-0 w-7 h-7 rounded-full ${bc} ${tc} flex items-center justify-center text-xs font-bold">${i + 1}</span>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-semibold text-gray-900 truncate text-sm">${evt.title}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <div class="flex-1 bg-gray-100 rounded-full h-1.5">
+                                <div class="bg-indigo-500 h-1.5 rounded-full transition-all duration-500" style="width:${pct}%"></div>
+                            </div>
+                            <span class="text-xs text-gray-400 flex-shrink-0">${pct}% full</span>
+                        </div>
+                    </div>
+                    <div class="text-right flex-shrink-0">
+                        <p class="font-bold text-indigo-600 text-sm">${evt.bookings}</p>
+                        <p class="text-xs text-gray-400">bookings</p>
+                    </div>
+                </div>`;
+            }).join('');
+
+            listEl.innerHTML = `<div class="space-y-3">${rows}</div>`;
+        }
+
+        async function fetchTopEvents() {
+            try {
+                const res = await fetch('/admin/api/top-events');
+                const events = await res.json();
+                renderTopEvents(events);
+                const now = new Date();
+                updatedEl.textContent = 'Updated ' + now.toLocaleTimeString('en-ZA', { hour: '2-digit', minute: '2-digit' });
+            } catch (e) {
+                console.warn('Top events update failed:', e);
+                updatedEl.textContent = 'Update failed';
+            }
+        }
+
+        fetchTopEvents();
+        setInterval(fetchTopEvents, 30_000);
+    })();
+</script>

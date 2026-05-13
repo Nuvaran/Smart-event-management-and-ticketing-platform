@@ -1,0 +1,181 @@
+<!-- Register Page -->
+<div>
+    <div class="mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 mb-1">Create Account</h2>
+        <p class="text-gray-500">Join Smart Events and start booking today</p>
+    </div>
+
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div class="flex items-start gap-3">
+                <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
+                <ul class="text-red-700 text-sm space-y-0.5">
+                    <% errors.forEach(e => { %><li><%= e %></li><% }); %>
+                </ul>
+            </div>
+        </div>
+    <% } %>
+
+    <!--
+        The backend authController expects a single "name" field.
+        We collect firstName + lastName separately for UX, then the
+        submit handler merges them into the hidden #name input before POST.
+    -->
+    <form id="registerForm" action="/auth/register" method="POST" class="space-y-4" novalidate>
+        <input type="hidden" id="name" name="name">
+        <!-- Name row -->
+        <div class="grid grid-cols-2 gap-3">
+            <div>
+                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                <input type="text" id="firstName" placeholder="Jane" required
+                    class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm 
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value="<%= typeof name !== 'undefined' ? name.split(' ')[0] : '' %>">
+                <p class="text-red-500 text-xs mt-1 hidden" id="firstNameError"></p>
+            </div>
+            <div>
+                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <input type="text" id="lastName" placeholder="Doe" required
+                    class="w-full px-3 py-2.5 border border-gray-300 rounded-lg text-sm 
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    value="<%= typeof name !== 'undefined' ? name.split(' ').slice(1).join(' ') : '' %>">
+                <p class="text-red-500 text-xs mt-1 hidden" id="lastNameError"></p>
+            </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+            <div class="relative">
+                <i class="fas fa-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="email" id="email" name="email" required placeholder="your@email.com"
+                    value="<%= typeof email !== 'undefined' ? email : '' %>"
+                    class="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm 
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+            <p class="text-red-500 text-xs mt-1 hidden" id="emailError"></p>
+        </div>
+
+        <!-- Password -->
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="password" id="password" name="password" required placeholder="Min 6 characters"
+                    class="w-full pl-9 pr-10 py-2.5 border border-gray-300 rounded-lg text-sm 
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="button" onclick="togglePw('password', this)"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-eye text-sm"></i>
+                </button>
+            </div>
+            <!-- Strength bar -->
+            <div class="mt-1.5 flex gap-1">
+                <div id="s1" class="h-1 flex-1 rounded bg-gray-200"></div>
+                <div id="s2" class="h-1 flex-1 rounded bg-gray-200"></div>
+                <div id="s3" class="h-1 flex-1 rounded bg-gray-200"></div>
+            </div>
+            <p class="text-red-500 text-xs mt-1 hidden" id="passwordError"></p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+            <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+            <div class="relative">
+                <i class="fas fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="password" id="confirmPassword" name="confirmPassword" required placeholder="Re-enter password"
+                    class="w-full pl-9 pr-10 py-2.5 border border-gray-300 rounded-lg text-sm 
+                           focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <button type="button" onclick="togglePw('confirmPassword', this)"
+                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    <i class="fas fa-eye text-sm"></i>
+                </button>
+            </div>
+            <p class="text-red-500 text-xs mt-1 hidden" id="confirmPasswordError"></p>
+        </div>
+
+        <!-- Terms -->
+        <div class="flex items-start gap-2">
+            <input type="checkbox" id="agreeTerms" class="mt-0.5 h-4 w-4 text-indigo-600 rounded border-gray-300" required>
+            <label for="agreeTerms" class="text-sm text-gray-600">
+                I agree to the <a href="/terms" class="text-indigo-600 hover:underline">Terms of Service</a> and <a href="/privacy" class="text-indigo-600 hover:underline">Privacy Policy</a>
+            </label>
+        </div>
+        <p class="text-red-500 text-xs hidden" id="termsError"></p>
+
+        <button type="submit" id="registerBtn"
+            class="w-full bg-indigo-600 text-white py-2.5 rounded-lg font-semibold text-sm 
+                   hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2">
+            <span id="btnText">Create Account</span>
+            <i class="fas fa-spinner fa-spin hidden" id="btnSpinner"></i>
+        </button>
+    </form>
+
+    <div class="relative my-6">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-200"></div></div>
+        <div class="relative flex justify-center"><span class="px-3 bg-white text-gray-400 text-sm">or</span></div>
+    </div>
+
+    <p class="text-center text-sm text-gray-600">
+        Already have an account? <a href="/auth/login" class="text-indigo-600 font-semibold hover:underline">Sign in</a>
+    </p>
+</div>
+
+<script>
+    function togglePw(id, btn) {
+        const f=document.getElementById(id), i=btn.querySelector('i');
+        
+        f.type = f.type==='password' ? 'text' : 'password';
+        i.classList.toggle('fa-eye'); i.classList.toggle('fa-eye-slash');
+    }
+
+    document.getElementById('password').addEventListener('input', function() {
+        const pw=this.value, bars=['s1','s2','s3'];
+
+        bars.forEach(id => document.getElementById(id).className='h-1 flex-1 rounded bg-gray-200');
+
+        let str=0;
+
+        if(pw.length>=6) str++;
+        if(pw.length>=10) str++;
+        if(/[A-Z]/.test(pw)&&/[0-9]/.test(pw)) str++;
+
+        const colors=['bg-red-400','bg-yellow-400','bg-green-500'];
+
+        for(let i=0; i<str; i++) {
+            document.getElementById(bars[i]).className='h-1 flex-1 rounded '+colors[str-1];
+        }
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+        let ok=true;
+
+        ['firstNameError','lastNameError','emailError','passwordError','confirmPasswordError','termsError']
+            .forEach(id => document.getElementById(id).classList.add('hidden'));
+
+        const fn  = document.getElementById('firstName').value.trim();
+        const ln  = document.getElementById('lastName').value.trim();
+        const em  = document.getElementById('email').value.trim();
+        const pw  = document.getElementById('password').value;
+        const cpw = document.getElementById('confirmPassword').value;
+        const cb  = document.getElementById('agreeTerms').checked;
+
+        if(!fn || fn.length<2) { showE('firstNameError','First name min 2 chars.'); ok=false; }
+        if(!ln || ln.length<2) { showE('lastNameError','Last name min 2 chars.');   ok=false; }
+        if(!em || !/^\S+@\S+\.\S+$/.test(em)) { showE('emailError','Valid email required.'); ok=false; }
+        if(!pw || pw.length<6) { showE('passwordError','Password min 6 chars.');    ok=false; }
+        if(pw!==cpw) { showE('confirmPasswordError','Passwords do not match.'); ok=false; }
+        if(!cb) { showE('termsError','You must agree to the terms.'); ok=false; }
+
+        if(!ok){ e.preventDefault(); return; }
+
+        // Merge first + last into the hidden "name" field the backend expects
+        document.getElementById('name').value = fn + ' ' + ln;
+
+        document.getElementById('registerBtn').disabled=true;
+        document.getElementById('btnText').textContent='Creating account…';
+        document.getElementById('btnSpinner').classList.remove('hidden');
+    });
+
+    function showE(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.classList.remove('hidden'); }
+</script>

@@ -1,13 +1,16 @@
-exports.isAuthenticated = (req,res,next) =>{
-    if (req.session.userId){
+exports.isAuthenticated = (req, res, next) => {
+    if (req.session.user) {
         return next();
     }
-    res.redirect(`/auth/login`);
-}
 
-exports.isAdmin = (req,res,next) =>{
-    if(req.session.role === `Admin` || req.session.role ===`admin`){
+    return res.redirect('/auth/login');
+};
+
+// Check if user is admin
+exports.isAdmin = (req, res, next) => {
+    if (req.session.user && req.session.user.role === 'admin') {
         return next();
     }
-    res.status(403).send("Access Denied: Admin only");
-}
+
+    return res.status(403).send('Access denied. Admins only.');
+};

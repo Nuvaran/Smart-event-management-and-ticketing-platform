@@ -1,0 +1,157 @@
+<!-- Admin Edit Event Page -->
+
+<% if (typeof user !== 'undefined' && user && user.role === 'admin') { %>
+
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">Edit Event</h1>
+        <p class="text-gray-600">Update event details below. Changes will reflect immediately on the platform.</p>
+    </div>
+
+    <!-- Error Messages -->
+    <% if (typeof errors !== 'undefined' && errors.length > 0) { %>
+        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+            <ul class="list-disc ml-5">
+                <% errors.forEach(err => { %>
+                    <li><%= err %></li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+
+    <!-- Form -->
+    <form action="/admin/events/<%= event._id %>/edit" method="POST" class="bg-white rounded-lg shadow p-6 space-y-6">
+        <!-- Title -->
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Event Title</label>
+            <input
+                type="text"
+                name="title"
+                value="<%= event.title %>"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                required
+            >
+        </div>
+
+        <!-- Description -->
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Description</label>
+            <textarea
+                name="description"
+                rows="4"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            ><%= event.description %></textarea>
+        </div>
+
+        <!-- Category + Date -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Category</label>
+                <select
+                    name="category"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    required
+                >
+                    <option value="conference" <%= event.category === 'conference' ? 'selected' : '' %>>Conference</option>
+                    <option value="workshop" <%= event.category === 'workshop' ? 'selected' : '' %>>Workshop</option>
+                    <option value="festival" <%= event.category === 'festival' ? 'selected' : '' %>>Festival</option>
+                    <option value="other" <%= event.category === 'other' ? 'selected' : '' %>>Other</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Date & Time</label>
+                <input
+                    type="datetime-local"
+                    name="date"
+                    value="<%= new Date(event.date).toISOString().slice(0,16) %>"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    required
+                >
+            </div>
+        </div>
+
+        <!-- Location -->
+        <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Location</label>
+            <input
+                type="text"
+                name="location"
+                value="<%= event.location %>"
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+            >
+        </div>
+
+        <!-- Capacity Section -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Capacity</label>
+                <input
+                    id="capacityInput"
+                    type="number"
+                    name="capacity"
+                    value="<%= event.capacity %>"
+                    min="1"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                    required
+                >
+            </div>
+            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                <p class="text-sm text-gray-600">Tickets Available (auto-calculated)</p>
+                <p class="text-2xl font-bold text-indigo-600 mt-1" id="ticketsPreview">
+                    <%= event.ticketsAvailable %>
+                </p>
+                <p class="text-xs text-gray-500 mt-1">
+                    Updates based on capacity changes
+                </p>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-between pt-4 border-t border-gray-200">
+            <a
+                href="/admin/events"
+                class="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg font-semibold hover:bg-gray-300 transition-colors"
+            >
+                Cancel
+            </a>
+            <button
+                type="submit"
+                class="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+            >
+                Save Changes
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Real time UI logic -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const capacityInput = document.getElementById('capacityInput');
+        const ticketsPreview = document.getElementById('ticketsPreview');
+        
+        // Store original values
+        const originalCapacity = parseInt(capacityInput.value) || 0;
+        const originalAvailable = parseInt(ticketsPreview.textContent) || 0;
+        const booked = originalCapacity - originalAvailable;
+
+        // Update preview when capacity changes
+        capacityInput.addEventListener('input', function() {
+            const newCapacity = parseInt(this.value) || 0;
+            const newAvailable = Math.max(0, newCapacity - booked);
+            ticketsPreview.textContent = newAvailable;
+        });
+    });
+</script>
+
+<% } else { %>
+
+<!-- Unauthorized -->
+<div class="text-center py-16">
+    <i class="fas fa-lock text-6xl text-gray-400 mb-4"></i>
+    <h1 class="text-3xl font-bold text-gray-900 mb-2">Access Denied</h1>
+    <p class="text-gray-600">Admin access required.</p>
+</div>
+
+<% } %>

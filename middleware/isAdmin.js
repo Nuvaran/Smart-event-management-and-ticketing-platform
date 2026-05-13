@@ -1,5 +1,3 @@
-//After isAuth middleware
-
 const isAdmin = (req, res, next) => {
   try {
     // Ensure user exists from isAuth and that role is admin
@@ -8,7 +6,7 @@ const isAdmin = (req, res, next) => {
     }
     else{
         const error = new Error('Access denied. Admin rights required.');
-        error.statusCode = 403; //403:Forbidden
+        error.statusCode = 403;
         next(error);
     }
   } 

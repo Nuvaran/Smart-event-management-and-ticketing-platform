@@ -1,0 +1,157 @@
+<div class="max-w-6xl mx-auto">
+
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-900 mb-2">
+            My Bookings
+        </h1>
+        <p class="text-gray-600">
+            View all your booked events and tickets.
+        </p>
+    </div>
+
+    <% if (bookings.length > 0) { %>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <% bookings.forEach(booking => { %>
+                <% const event = booking.event || {}; %>
+
+                <div class="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+                    <!-- Event Image -->
+                    <div class="h-48 bg-gray-200 overflow-hidden">
+                        <img
+                            src="<%= event.imageUrl || '/images/placeholders/event-placeholder.jpg' %>"
+                            alt="<%= event.title || 'Event' %>"
+                            class="w-full h-full object-cover"
+                        >
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h2 class="text-2xl font-bold text-gray-900 mb-1">
+                                    <%= event.title || 'Event no longer available' %>
+                                </h2>
+                                <p class="text-sm text-gray-500">
+                                    Booking ID:
+                                    <span class="font-mono">
+                                        <%= booking._id %>
+                                    </span>
+                                </p>
+                            </div>
+                            <span class="<%= booking.status === 'cancelled'
+                                ? 'bg-red-100 text-red-700'
+                                : 'bg-green-100 text-green-700' %> px-3 py-1 rounded-full text-sm font-semibold">
+                                <%= booking.status %>
+                            </span>
+                        </div>
+
+                        <!-- Details -->
+                        <div class="space-y-3 text-gray-700">
+                            <!-- Date -->
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-calendar-alt text-indigo-600"></i>
+                                <span>
+                                    <%= event.date
+                                        ? new Date(event.date).toLocaleDateString('en-ZA', {
+                                            weekday: 'long',
+                                            year: 'numeric',
+                                            month: 'long',
+                                            day: 'numeric'
+                                        })
+                                        : 'Date unavailable'
+                                    %>
+                                </span>
+                            </div>
+
+                            <!-- Location -->
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-map-marker-alt text-indigo-600"></i>
+                                <span>
+                                    <%= event.location || 'Location unavailable' %>
+                                </span>
+                            </div>
+
+                            <!-- Tickets -->
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-ticket-alt text-indigo-600"></i>
+                                <span>
+                                    Tickets Booked:
+                                    <strong><%= booking.ticketsBooked %></strong>
+                                </span>
+                            </div>
+
+                            <!-- Booked Date -->
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-clock text-indigo-600"></i>
+                                <span>
+                                    Booked On:
+                                    <%= booking.bookedAt
+                                        ? new Date(booking.bookedAt).toLocaleDateString('en-ZA')
+                                        : 'N/A'
+                                    %>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Actions -->
+                        <div class="mt-6 flex gap-3">
+                            <!-- View Event -->
+                            <a
+                                href="/events/<%= event._id %>"
+                                class="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-semibold 
+                                       hover:bg-indigo-700 transition-colors text-center"
+                            >
+                                View Event
+                            </a>
+
+                            <!-- Cancel Booking -->
+                            <% if (booking.status !== 'cancelled') { %>
+                                <form
+                                    action="/bookings/<%= booking._id %>/cancel"
+                                    method="POST"
+                                    class="flex-1"
+                                >
+                                    <button
+                                        type="submit"
+                                        class="w-full bg-red-600 text-white py-3 rounded-lg font-semibold 
+                                               hover:bg-red-700 transition-colors"
+                                    >
+                                        Cancel Booking
+                                    </button>
+                                </form>
+                            <% } else { %>
+                                <button
+                                    disabled
+                                    class="flex-1 bg-gray-300 text-gray-600 py-3 rounded-lg font-semibold cursor-not-allowed"
+                                >
+                                    Cancelled
+                                </button>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+    <% } else { %>
+
+        <!-- Empty State -->
+        <div class="bg-white rounded-xl shadow-md border border-gray-200 p-12 text-center">
+            <i class="fas fa-ticket-alt text-6xl text-gray-300 mb-6"></i>
+            <h2 class="text-3xl font-bold text-gray-900 mb-3">
+                No Bookings Yet
+            </h2>
+            <p class="text-gray-600 mb-8">
+                You have not booked any events yet.
+            </p>
+            <a
+                href="/"
+                class="inline-block bg-indigo-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-indigo-700 transition-colors"
+            >
+                Browse Events
+            </a>
+        </div>
+
+    <% } %>
+</div>

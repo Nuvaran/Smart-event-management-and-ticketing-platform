@@ -1,9 +1,11 @@
 const express = require('express');
-const router  = express.Router();
-const eventController = require(`../controllers/eventController`);
-const { isAdmin } = require(`../middleware/authMiddleware`);
+const router = express.Router();
+const eventController = require('../controllers/eventController');
 
-router.get(`/`, eventController.getAllEvents);
-router.post(`/add`, isAdmin, eventController.createEvent);
+// Get all events
+router.get('/', eventController.getAllEvents);
+
+// Get event by ID
+router.get('/:id', eventController.getEventById);
 
 module.exports = router;

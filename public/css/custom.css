@@ -1,0 +1,433 @@
+/*============================================
+Smart Event Platform - Custom Styles
+============================================*/
+:root {
+    /* Brand Colors */
+    --color-primary: #4F46E5;
+    --color-primary-hover: #4338CA;
+    --color-primary-light: #EEF2FF;
+    
+    --color-accent: #14B8A6;
+    --color-accent-hover: #0D9488;
+    --color-accent-light: #CCFBF1;
+    
+    /* Functional Colors */
+    --color-success: #10B981;
+    --color-warning: #F59E0B;
+    --color-danger: #EF4444;
+    --color-info: #3B82F6;
+    
+    /* Neutral Colors */
+    --color-bg-primary: #F9FAFB;
+    --color-bg-secondary: #FFFFFF;
+    --color-text-primary: #111827;
+    --color-text-secondary: #6B7280;
+    --color-border: #E5E7EB;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/*Global Styles*/
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/*Auth Form Container*/
+.auth-form-container {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*Form Inputs*/
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+select,
+textarea {
+    transition: all 0.2s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+input[type="text"]:invalid:not(:placeholder-shown),
+input[type="email"]:invalid:not(:placeholder-shown),
+input[type="password"]:invalid:not(:placeholder-shown),
+input[type="tel"]:invalid:not(:placeholder-shown),
+input[type="number"]:invalid:not(:placeholder-shown) {
+    border-color: #EF4444;
+}
+
+input[type="text"]:valid:not(:placeholder-shown),
+input[type="email"]:valid:not(:placeholder-shown),
+input[type="password"]:valid:not(:placeholder-shown),
+input[type="tel"]:valid:not(:placeholder-shown),
+input[type="number"]:valid:not(:placeholder-shown) {
+    border-color: #10B981;
+}
+
+/*Buttons*/
+button {
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Primary Button */
+.btn-primary,
+button[type="submit"] {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease-in-out;
+}
+
+.btn-primary:hover,
+button[type="submit"]:hover {
+    background-color: var(--color-primary-hover);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    transform: translateY(-2px);
+}
+
+.btn-primary:active,
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* Secondary Button */
+.btn-secondary {
+    background-color: transparent;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-primary-light);
+}
+
+/* Danger Button */
+.btn-danger {
+    background-color: var(--color-danger);
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+}
+
+.btn-danger:hover {
+    background-color: #DC2626;
+}
+
+/*Links*/
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+    color: var(--color-primary-hover);
+    text-decoration: underline;
+}
+
+/*Alert Messages*/
+.alert {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background-color: #ECFDF5;
+    border-left: 4px solid var(--color-success);
+    color: #065F46;
+}
+
+.alert-danger,
+.alert-error {
+    background-color: #FEF2F2;
+    border-left: 4px solid var(--color-danger);
+    color: #7F1D1D;
+}
+
+.alert-warning {
+    background-color: #FFFBEB;
+    border-left: 4px solid var(--color-warning);
+    color: #78350F;
+}
+
+.alert-info {
+    background-color: #EFF6FF;
+    border-left: 4px solid var(--color-info);
+    color: #082F49;
+}
+
+/*Badges*/
+.badge {
+    display: inline-block;
+    padding: 0.375rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badge-success {
+    background-color: var(--color-success);
+    color: white;
+}
+
+.badge-danger {
+    background-color: var(--color-danger);
+    color: white;
+}
+
+.badge-warning {
+    background-color: var(--color-warning);
+    color: white;
+}
+
+.badge-info {
+    background-color: var(--color-info);
+    color: white;
+}
+
+/*Checkboxes & Radio Buttons*/
+input[type="checkbox"],
+input[type="radio"] {
+    cursor: pointer;
+    width: 1rem;
+    height: 1rem;
+    accent-color: var(--color-primary);
+}
+
+/*Loading Spinner*/
+.spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid rgba(79, 70, 229, 0.2);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/*Cards & Sections*/
+.card {
+    background-color: var(--color-bg-secondary);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+/*Responsive Utilities*/
+
+/*Hide on mobile, show on larger screens*/
+@media (max-width: 768px) {
+    .hide-mobile {
+        display: none !important;
+    }
+}
+
+@media (min-width: 769px) {
+    .hide-desktop {
+        display: none !important;
+    }
+}
+
+/*Utility Classes*/
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: var(--color-text-secondary);
+}
+
+.font-bold {
+    font-weight: 700;
+}
+
+.font-semibold {
+    font-weight: 600;
+}
+
+.font-medium {
+    font-weight: 500;
+}
+
+.mt-0 { margin-top: 0; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+
+.mb-0 { margin-bottom: 0; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+
+.space-y-2 > * + * {
+    margin-top: 0.5rem;
+}
+
+.space-y-4 > * + * {
+    margin-top: 1rem;
+}
+
+/*Focus States for Accessibility*/
+button:focus,
+a:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+/*Print Styles*/
+@media print {
+    button,
+    .btn-primary,
+    .btn-secondary,
+    .hide-print {
+        display: none !important;
+    }
+    
+    body {
+        background-color: white;
+    }
+}
+
+/*Dark Mode Preparation (CSS Variables)*/
+
+/*These will be implemented in Phase 2*/
+/*Just using light mode for now*/
+
+/*Transitions & Animations*/
+.transition-all {
+    transition: all 0.2s ease-in-out;
+}
+
+.transition-colors {
+    transition: color 0.2s ease-in-out, background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.transition-transform {
+    transition: transform 0.2s ease-in-out;
+}
+
+/*Accessibility*/
+
+/*Screen reader only text*/
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Skip to main content link */
+.skip-to-main {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--color-primary);
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.skip-to-main:focus {
+    top: 0;
+}
+
+/* Focus visible for keyboard navigation */
+*:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}

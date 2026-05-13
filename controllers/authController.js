@@ -5,7 +5,6 @@ exports.register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        
         const hashedPassword = await bcrypt.hash(password, 10); 
 
         const newUser = new User({
@@ -26,13 +25,10 @@ exports.login = async (req, res) => {
     try {
         const { email, password } = req.body;
         const user = await User.findOne({ email });
-
         
         if (user && await bcrypt.compare(password, user.password)) {
-            
             req.session.userId = user._id;
             req.session.role = user.role;
-            
             
             if (user.role === 'admin') {
                 return res.redirect('/admin/dashboard');
